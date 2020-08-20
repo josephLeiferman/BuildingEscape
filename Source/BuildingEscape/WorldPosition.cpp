@@ -19,9 +19,8 @@ UWorldPosition::UWorldPosition()
 void UWorldPosition::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UE_LOG(LogTemp, Warning, TEXT("Object name is: %s"), *GetOwner()->GetName());
 	FVector ObjectPosition = GetOwner()->GetActorLocation();
+	UE_LOG(LogTemp, Warning, TEXT("Object's name is: %s"), *GetOwner()->GetName());
 	UE_LOG(LogTemp, Warning, TEXT("X: %f Y: %f Z: %f"), ObjectPosition.X, ObjectPosition.Y, ObjectPosition.Z);
 	
 }
