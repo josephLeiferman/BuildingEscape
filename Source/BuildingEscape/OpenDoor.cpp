@@ -21,7 +21,7 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	float OpenDoorRotation = -90.f;
+	float OpenDoorRotation = 90.f;
 
 	FRotator CurrentRotation = GetOwner()->GetActorRotation();
 	CurrentRotation.Yaw -= OpenDoorRotation;
