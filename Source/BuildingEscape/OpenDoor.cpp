@@ -21,12 +21,6 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	float OpenDoorRotation = 90.f;
-
-	FRotator CurrentRotation = GetOwner()->GetActorRotation();
-	CurrentRotation.Yaw -= OpenDoorRotation;
-
-	GetOwner()->SetActorRotation(CurrentRotation);
 
 	
 }
@@ -37,6 +31,13 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *GetOwner()->GetActorRotation().ToString());
+	UE_LOG(LogTemp, Warning, TEXT("The yaw is: %f"), GetOwner()->GetActorRotation().Yaw);
+
+	float CurrentYaw  = GetOwner()->GetActorRotation().Yaw;
+	FRotator OpenDoor(0.f, TargetYaw, 0.f);
+	OpenDoor.Yaw = FMath::Lerp(CurrentYaw, TargetYaw, 0.01f);
+	GetOwner()->SetActorRotation(OpenDoor);
+
 }
 
