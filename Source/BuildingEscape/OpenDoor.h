@@ -27,7 +27,9 @@ public:
 
 private:
 
-float TargetYaw = -90.f;
+float TargetYaw;
+float InitialYaw;
+float CurrentYaw;
 
 
 };
