@@ -1,6 +1,7 @@
 // Copyright Joseph Leiferman 2020
 
-
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
 #include "Math/Axis.h"
@@ -29,6 +30,7 @@ void UOpenDoor::BeginPlay()
         UE_LOG(LogTemp, Error, TEXT("%s has the open door component on it, but no pressurepalte set"), *GetOwner()->GetName());
     }
 
+    ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
     
 }
 
@@ -48,7 +50,7 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 void UOpenDoor::OpenDoor(float DeltaTime) 
 {
-    CurrentYaw = FMath::FInterpTo(CurrentYaw, TargetYaw, DeltaTime, 2);
+    CurrentYaw = FMath::FInterpTo(CurrentYaw, TargetYaw, DeltaTime, 1.5);
     FRotator DoorRotation = GetOwner()->GetActorRotation();
     DoorRotation.Yaw = CurrentYaw;
     GetOwner()->SetActorRotation(DoorRotation);
