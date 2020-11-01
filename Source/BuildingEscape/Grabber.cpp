@@ -55,10 +55,21 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		5
 	);
 
-
+	FHitResult Hit;
 	// Ray-cast out to a certain distance (Reach)
-	
+	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
+
+	GetWorld() -> LineTraceSingleByObjectType(
+											OUT Hit,
+											PlayerViewPointLocation,
+											LineTraceEnd,
+											FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
+											TraceParams);
 	// Logging out to test
+	if(Hit.Actor != NULL) {
+		UE_LOG(LogTemp, Warning, TEXT("The following actor is within reach: %s"), *Hit.Actor->GetName());
+	}
+
 	// See what it hits
 
 
