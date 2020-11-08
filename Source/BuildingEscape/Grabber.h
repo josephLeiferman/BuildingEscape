@@ -31,11 +31,14 @@ private:
 
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
 
 	void Grab();
 	void Release();
 	void FindPhysicsHandle();
 	void SetupInputComponent();
 	// Return the first actor within reach with physics body
-	FHitResult GetFirstPhysicsBodyInReach() const;
+	FHitResult GetFirstPhysicsBodyInReach();
+	FVector PlayersReach();
 };
