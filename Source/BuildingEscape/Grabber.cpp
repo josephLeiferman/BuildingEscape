@@ -28,14 +28,10 @@ void UGrabber::BeginPlay()
 void UGrabber::FindPhysicsHandle()
 {
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if(PhysicsHandle) 
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Physics Handle has been found."));
-	} 
-	else 
+	if(PhysicsHandle == nullptr) 
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s does not have a PhysicsHandle Component"), *GetOwner()->GetName());
-	}
+	} 
 }
 
 void UGrabber::SetupInputComponent()
@@ -50,9 +46,7 @@ void UGrabber::SetupInputComponent()
 
 void UGrabber::Grab()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Grabber pressed"));
-
-	FVector EndOfReach = PlayersReach();
+	FVector EndOfReach = GetPlayersReach();
 
 	// Try and reach any actors with a phyics body collision channel set 
 	FHitResult HitResult = GetFirstPhysicsBodyInReach();
@@ -67,9 +61,6 @@ void UGrabber::Grab()
 
 void UGrabber::Release()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Grabber released"));
-
-	// remove/release the physics handle
 	PhysicsHandle->ReleaseComponent();
 }
 
@@ -79,19 +70,18 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	FVector EndOfReach = PlayersReach();
 	// If phyics handle is attached move component
 	if(PhysicsHandle->GrabbedComponent)
 	{
 		// move the object we are holding
-		PhysicsHandle->SetTargetLocation(EndOfReach);
+		PhysicsHandle->SetTargetLocation(GetPlayersReach());
 	}
 }
 
 FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 {
 	// Get the palyers viewpoint
-	FVector EndOfReach = PlayersReach();
+	FVector EndOfReach = GetPlayersReach();
 	FHitResult Hit;
 	// Ray-cast out to a certain distance (Reach)
 	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
@@ -102,22 +92,13 @@ FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 											EndOfReach,
 											FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
 											TraceParams);
-
-	AActor* ActorHit = Hit.GetActor();
-	// Logging out to test
-	if(ActorHit) 
-	{
-		UE_LOG(LogTemp, Warning, TEXT("The following actor is within reach: %s"), *ActorHit->GetName());
-	}
-
 	return Hit;
 }
 
-FVector UGrabber::PlayersReach()
+FVector UGrabber::GetPlayersReach()
 {
 	GetWorld() -> GetFirstPlayerController() -> GetPlayerViewPoint(OUT PlayerViewPointLocation, 
 																   OUT PlayerViewPointRotation);
 	
 	return PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
 }
-
