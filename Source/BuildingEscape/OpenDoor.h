@@ -27,7 +27,7 @@ public:
 
     void OpenDoor(float DeltaTime);
     void CloseDoor(float DeltaTime);
-
+    float TotalMassOfActors() const;
 
 private:
 
@@ -52,5 +52,8 @@ private:
 
     UPROPERTY(EditAnywhere)
     AActor* ActorThatOpens;
+
+    UPROPERTY(EditAnywhere)
+    float TriggerMass = 50.f;
 
 };
