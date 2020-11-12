@@ -28,7 +28,7 @@ void UGrabber::BeginPlay()
 void UGrabber::FindPhysicsHandle()
 {
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if(PhysicsHandle == nullptr) 
+	if(!PhysicsHandle) 
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s does not have a PhysicsHandle Component"), *GetOwner()->GetName());
 	} 
@@ -50,17 +50,21 @@ void UGrabber::Grab()
 
 	// Try and reach any actors with a phyics body collision channel set 
 	FHitResult HitResult = GetFirstPhysicsBodyInReach();
-	UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent();
-	if(HitResult.GetActor())
+	UPrimitiveComponent*  ComponentToGrab = HitResult.GetComponent();
+	AActor* ActorHit = HitResult.GetActor();
+	if(ActorHit)
 	{
+		if(!PhysicsHandle){return;}
+
 		PhysicsHandle->GrabComponentAtLocation(ComponentToGrab, 
-											NAME_None, 
-											EndOfReach);
+											   NAME_None, 
+											   EndOfReach);
 	}
 }
 
 void UGrabber::Release()
 {
+	if(!PhysicsHandle){return;}
 	PhysicsHandle->ReleaseComponent();
 }
 
@@ -70,6 +74,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if(!PhysicsHandle){return;}
 	// If phyics handle is attached move component
 	if(PhysicsHandle->GrabbedComponent)
 	{
@@ -86,7 +91,7 @@ FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 	// Ray-cast out to a certain distance (Reach)
 	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
 
-	GetWorld() -> LineTraceSingleByObjectType(
+	GetWorld()->LineTraceSingleByObjectType(
 											OUT Hit,
 											PlayerViewPointLocation,
 											EndOfReach,
@@ -97,7 +102,7 @@ FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 
 FVector UGrabber::GetPlayersReach()
 {
-	GetWorld() -> GetFirstPlayerController() -> GetPlayerViewPoint(OUT PlayerViewPointLocation, 
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewPointLocation, 
 																   OUT PlayerViewPointRotation);
 	
 	return PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
