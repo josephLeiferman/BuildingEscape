@@ -29,8 +29,12 @@ private:
 	UPROPERTY(EditAnywhere)
     float Reach = 100.f;
 
+	UPROPERTY(EditAnywhere)
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	
+	UPROPERTY(EditAnywhere)
 	UInputComponent* InputComponent = nullptr;
+	
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
 

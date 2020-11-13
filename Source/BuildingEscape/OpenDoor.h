@@ -34,6 +34,10 @@ private:
     float InitialYaw;
     float CurrentYaw;
     float DoorLastOpened = 0.f;
+    bool SoundSwitch = false;
+
+    UPROPERTY(EditAnywhere)
+    UAudioComponent* AudioComponent = nullptr;
 
     UPROPERTY(EditAnywhere)
     float OpenDoorSpeed = 1.5f;
@@ -52,5 +56,9 @@ private:
 
     UPROPERTY(EditAnywhere)
     float TriggerMass = 50.f;
+
+    void FindAudioComponent();
+
+    void ValidatePressurePlate() const;
 
 };
