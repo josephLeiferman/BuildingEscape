@@ -76,6 +76,7 @@ void UOpenDoor::OpenDoor(float DeltaTime)
     DoorRotation.Yaw = CurrentYaw;
     GetOwner()->SetActorRotation(DoorRotation);
     
+    if(!AudioComponent){return;}
     if(!SoundSwitch)
     {
         AudioComponent->Play();
@@ -90,7 +91,8 @@ void UOpenDoor::CloseDoor(float DeltaTime)
     DoorRotation.Yaw = CurrentYaw;
     GetOwner()->SetActorRotation(DoorRotation);
 
-     if(SoundSwitch)
+    if(!AudioComponent){return;}
+    if(SoundSwitch)
     {
         AudioComponent->Play();
         SoundSwitch = false;
